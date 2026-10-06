@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <USBPcapRoot>$(MSBuildThisFileDirectory)</USBPcapRoot>
+    <USBPcapKitVersion>10.0.28000.2526</USBPcapKitVersion>
+    <WindowsTargetPlatformVersion>10.0.28000.0</WindowsTargetPlatformVersion>
+    <WDKBuildFolder>$(WindowsTargetPlatformVersion)</WDKBuildFolder>
+    <AdditionalVCTargetsPath>$(AdditionalVCTargetsPath);$(USBPcapRoot).tools\vctargets\v180\</AdditionalVCTargetsPath>
+  </PropertyGroup>
+  <!-- Import before Cpp.Default.props so kit paths take precedence over installed SDKs. -->
+  <Import Project="$(USBPcapRoot)packages\Microsoft.Windows.WDK.arm64.$(USBPcapKitVersion)\build\native\Microsoft.Windows.WDK.arm64.props" />
+  <Import Project="$(USBPcapRoot)packages\Microsoft.Windows.SDK.CPP.arm64.$(USBPcapKitVersion)\build\native\Microsoft.Windows.SDK.cpp.arm64.props" />
+  <Import Project="$(USBPcapRoot)packages\Microsoft.Windows.SDK.CPP.$(USBPcapKitVersion)\build\native\Microsoft.Windows.SDK.cpp.props" />
+</Project>

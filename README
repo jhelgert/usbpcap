@@ -7,7 +7,36 @@ Directory overview:
   USBPcapCMD - sample user space application
   USBPcapDriver - filter driver used to capture data
 
-Build instructions:
+Windows ARM64 (Windows 11 24H2 or newer):
+  This branch builds a native ARM64 driver and USBPcapCMD with Visual Studio
+  2026. Development installation and operation have been reported working
+  in a Windows ARM64 VM on macOS using UTM; this is not production certification.
+
+  From PowerShell in the checkout (no administrator privileges needed):
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\build_arm64.ps1
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\test_arm64.ps1
+
+  These overrides apply only to the launched PowerShell process; they do not
+  change the system execution policy. Run tests BEFORE signing the package.
+
+  Release outputs:
+    build\ARM64\Release\USBPcapCMD\USBPcapCMD.exe
+    build\ARM64\Release\USBPcapDriver\package\ (SYS, INF and CAT)
+
+  The build output is UNSIGNED. Before development installation:
+    1. Back up the test machine/VM and save any BitLocker recovery key.
+    2. Disable the guest's Secure Boot, enable TESTSIGNING, and reboot Windows.
+    3. Create/trust a development certificate, sign the packaged SYS,
+       regenerate its catalog, then sign the catalog.
+    4. Right-click the packaged USBPcap.inf, choose Install, then REBOOT Windows.
+    5. Check the service and capture interfaces; in UTM, pass the USB device
+       through to Windows before capturing its traffic.
+
+  See BUILDING-ARM64.md for the full prerequisites and commands, UTM-specific
+  Secure Boot settings, signature troubleshooting, and installation checks.
+  The legacy NSIS/WiX installers below are not ARM64 installers.
+
+Legacy x86/x64 build instructions:
   Download and install Windows Driver Kit 7.1.0 from Microsoft
     http://www.microsoft.com/en-us/download/details.aspx?id=11800
 
@@ -27,8 +56,9 @@ Build instructions:
   Visual Studio 2013 Command Prompt:
   > MSBuild dirs.sln /p:Configuration="Win8 Debug"
 
-Installation:
-  TESTSIGNING must be enabled in order to install this driver on 64 bit
+Legacy development installation (ARM64: use BUILDING-ARM64.md instead):
+  The driver must be test-signed and its certificate trusted before installation.
+  TESTSIGNING must be enabled in order to install a test-signed driver on 64 bit
   Windows. To do so, issue following command (as administrator):
     Bcdedit.exe -set TESTSIGNING ON
   and reboot.
